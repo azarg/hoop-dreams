@@ -389,6 +389,7 @@ MonoBehaviour:
   ballPrefab: {fileID: 4261151287774905018, guid: 39ea9a5027ba20642a04eaa5792a8354, type: 3}
   force: 10
   forceAngle: -45
+  spawnDelay: 1
 --- !u!4 &560144201
 Transform:
   m_ObjectHideFlags: 0
