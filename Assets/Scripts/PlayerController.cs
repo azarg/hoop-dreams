@@ -9,23 +9,30 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float force;
     [SerializeField] private float forceAngle;
     [SerializeField] private float spawnDelay;
+    public IndicatorArrow indicatorArrow;
 
+    private Camera mainCamera;
     private bool mouseClicked;
+    private float mouseAngle;
 
-    // Start is called before the first frame update
     void Start()
     {
         currentBall = Instantiate(ballPrefab, transform.position, Quaternion.identity);
+        mainCamera = Camera.main;
+        var pinPosition = mainCamera.WorldToScreenPoint(transform.position);
+        indicatorArrow.Initialize(pinPosition);
     }
+
 
     void Update()
     {
-        if(Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
         {
+            mouseAngle = 90f - Vector2.Angle(indicatorArrow.transform.up, Vector2.right);
             mouseClicked = true;
         }
     }
-    // Update is called once per frame
+
     void FixedUpdate()
     {
         if(mouseClicked)
@@ -42,11 +49,12 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+
     private void Kick(GameObject ball)
     {
         var rb = ball.GetComponent<Rigidbody>();
         rb.useGravity = true;
-        rb.AddForce(Quaternion.Euler(forceAngle, 0, 0) * Vector3.forward * force, ForceMode.Impulse);
+        rb.AddForce(Quaternion.Euler(forceAngle,mouseAngle,0) * Vector3.forward * indicatorArrow.GetSize(), ForceMode.Impulse);
     }
 
     IEnumerator SpawnNextBall()
