@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -19,8 +20,10 @@ public class PlayerController : MonoBehaviour
     {
         currentBall = Instantiate(ballPrefab, transform.position, Quaternion.identity);
         mainCamera = Camera.main;
-        var pinPosition = mainCamera.WorldToScreenPoint(transform.position);
-        indicatorArrow.Initialize(pinPosition);
+
+        // Pass the player's (ball) position to the kick indicator arrow
+        var playerScreenPosition = mainCamera.WorldToScreenPoint(transform.position);
+        indicatorArrow.SetOrigin(playerScreenPosition);
     }
 
 
@@ -54,7 +57,7 @@ public class PlayerController : MonoBehaviour
     {
         var rb = ball.GetComponent<Rigidbody>();
         rb.useGravity = true;
-        rb.AddForce(Quaternion.Euler(forceAngle,mouseAngle,0) * Vector3.forward * indicatorArrow.GetSize(), ForceMode.Impulse);
+        rb.AddForce(Quaternion.Euler(forceAngle,mouseAngle,0) * Vector3.forward * indicatorArrow.GetForce(), ForceMode.Impulse);
     }
 
     IEnumerator SpawnNextBall()
